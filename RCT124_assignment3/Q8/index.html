@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title> Quiz Application</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f7f7f7;
+            margin: 0;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+        }
+        h2 {
+            margin-bottom: 20px;
+        }
+        .question {
+            margin-bottom: 20px;
+        }
+        .options input {
+            margin-right: 10px;
+        }
+        .btn {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn.restart {
+            background-color: #007bff;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script src="https://www.unpkg.com/react@18.2.0/umd/react.development.js"></script>
+    <script src="https://www.unpkg.com/react-dom@18.2.0/umd/react-dom.development.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/babel-standalone@6.26.0/babel.min.js"></script>
+
+    <script type="text/babel">
+        const { useState } = React;
+
+        function Quiz() {
+            const questions = [
+                {
+                    questionText: "What is the purpose of the useState hook in React?",
+                    options: [
+                        "To fetch data from an API",
+                        "To manage component state",
+                        "To apply styles to a component",
+                        "To render a component conditionally"
+                    ],
+                    correctAnswer: "To manage component state"
+                },
+                {
+                    questionText: "What is JSX in React?",
+                    options: [
+                        "A function to handle events",
+                        "A JavaScript XML-like syntax",
+                        "A tool to compile React code",
+                        "A library for routing in React"
+                    ],
+                    correctAnswer: "A JavaScript XML-like syntax"
+                },
+                {
+                    questionText: "Which method is used to update state in React?",
+                    options: [
+                        "setState",
+                        "updateState",
+                        "changeState",
+                        "modifyState"
+                    ],
+                    correctAnswer: "setState"
+                }
+            ];
+
+            const [currentAnswers, setCurrentAnswers] = useState(Array(questions.length).fill(null));
+            const [score, setScore] = useState(null);
+
+            const handleAnswerChange = (questionIndex, answer) => {
+                const newAnswers = [...currentAnswers];
+                newAnswers[questionIndex] = answer;
+                setCurrentAnswers(newAnswers);
+            };
+
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                let calculatedScore = 0;
+                currentAnswers.forEach((answer, index) => {
+                    if (answer === questions[index].correctAnswer) {
+                        calculatedScore += 1;
+                    }
+                });
+                setScore(calculatedScore);
+            };
+
+            const handleRestart = () => {
+                setCurrentAnswers(Array(questions.length).fill(null));
+                setScore(null);
+            };
+
+            return (
+                <div className="container">
+                    {score === null ? (
+                        <form onSubmit={handleSubmit}>
+                            <h2>React Quiz Application</h2>
+                            {questions.map((q, index) => (
+                                <div key={index} className="question">
+                                    <p>{q.questionText}</p>
+                                    <div className="options">
+                                        {q.options.map((option, i) => (
+                                            <label key={i}>
+                                                <input
+                                                    type="radio"
+                                                    name={`question-${index}`}
+                                                    value={option}
+                                                    checked={currentAnswers[index] === option}
+                                                    onChange={() => handleAnswerChange(index, option)}
+                                                    required
+                                                />
+                                                {option}
+                                            </label>
+                                        ))}
+                                    </div>
+                                </div>
+                            ))}
+                            <button type="submit" className="btn">Submit Quiz</button>
+                        </form>
+                    ) : (
+                        <div>
+                            <h2>Your Score: {score} / {questions.length}</h2>
+                            <button className="btn restart" onClick={handleRestart}>Restart Quiz</button>
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        ReactDOM.render(<Quiz />, document.getElementById('root'));
+    </script>
+</body>
+</html>

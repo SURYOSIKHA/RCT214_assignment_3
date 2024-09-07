@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Responsive Image Gallery</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <style>
+      /* Styles for the Navbar */
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      .navbar {
+        background-color: #333;
+        color: white;
+        display: flex;
+        justify-content: flex-start; /* Align all items to the left */
+        align-items: center;
+        padding: 10px 20px;
+        position: relative;
+      }
+
+      .navbar ul {
+        list-style: none;
+        display: flex;
+        margin: 0;
+        padding: 0;
+      }
+
+      .navbar li {
+        margin-left: 20px;
+      }
+
+      .navbar a {
+        color: white;
+        text-decoration: none;
+        font-size: 18px;
+        display: flex;
+        align-items: center;
+      }
+
+      .navbar a i {
+        margin-right: 8px;
+      }
+
+      /* Hamburger Menu */
+      .hamburger {
+        display: none;
+        font-size: 24px;
+        cursor: pointer;
+        margin-left: auto; /* Keep hamburger to the right */
+      }
+
+      /* Responsive Menu */
+      @media (max-width: 768px) {
+        .navbar ul {
+          display: none;
+        }
+
+        .navbar ul.open {
+          display: flex;
+          flex-direction: column;
+          position: absolute;
+          top: 60px;
+          left: 0; /* Align to the left */
+          background-color: #333;
+          width: 100%;
+          text-align: left; /* Align text to the left */
+        }
+
+        .navbar li {
+          margin: 10px 0;
+        }
+
+        .hamburger {
+          display: block;
+        }
+
+        .navbar ul li a {
+          padding: 10px 20px; /* Add padding for a better look */
+          width: 100%;
+        }
+      }
+
+      /* Gallery Styles */
+      .gallery {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        padding: 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .card {
+        background-color: white;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        overflow: hidden;
+        text-align: center;
+      }
+
+      .card img {
+        width: 100%;
+        height: 300px;
+        object-fit: cover;
+      }
+
+      .card h3 {
+        padding: 10px;
+      }
+
+      .card p {
+        padding-bottom: 10px;
+        font-size: 18px;
+        color: #333;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <script src="https://www.unpkg.com/react@18.2.0/umd/react.development.js"></script>
+    <script src="https://www.unpkg.com/react-dom@18.2.0/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script type="text/babel">
+      function Navbar() {
+        const [menuOpen, setMenuOpen] = React.useState(false);
+
+        const toggleMenu = () => {
+          setMenuOpen(!menuOpen);
+        };
+
+        return (
+          <nav className="navbar">
+            <div className="hamburger" onClick={toggleMenu}>
+              <i className="fas fa-bars"></i>
+            </div>
+            <ul className={menuOpen ? "open" : ""}>
+              <li><a href="#"><i className="fas fa-home"></i> Home</a></li>
+              <li><a href="#"><i className="fas fa-images"></i> Gallery</a></li>
+              <li><a href="#"><i className="fas fa-envelope"></i> Contact</a></li>
+              <li><a href="#"><i className="fas fa-info-circle"></i> About</a></li>
+            </ul>
+          </nav>
+        );
+      }
+
+      function ImageCard({ title, price, img }) {
+        return (
+          <div className="card">
+            <img src={img} alt={title} />
+            <h3>{title}</h3>
+            <p>{price}</p>
+          </div>
+        );
+      }
+
+      function Gallery() {
+        const items = [
+          { title: 'COACH', price: '$199.99', img: 'https://img.tatacliq.com/images/i8/658Wx734H/MP000000015421856_658Wx734H_202211240113421.jpeg' },
+          { title: 'Michael Kors', price: '$249.99', img: 'https://img.tatacliq.com/images/i7/658Wx734H/MP000000012463349_658Wx734H_202203131305101.jpeg' },
+          { title: 'ALDO', price: '$299.99', img: 'https://img.tatacliq.com/images/i16//658Wx734H/MP000000021201292_658Wx734H_202402160552291.jpeg' },
+          { title: 'LIU JO', price: '$349.99', img: 'https://img.tatacliq.com/images/i18//658Wx734H/MP000000022798654_658Wx734H_202407031915561.jpeg' },
+          { title: 'GUESS', price: '$399.99', img: 'https://img.tatacliq.com/images/i16//658Wx734H/MP000000020930358_658Wx734H_202401261515511.jpeg' },
+          { title: 'Dune London', price: '$449.99', img: 'https://img.tatacliq.com/images/i19//658Wx734H/MP000000023224010_658Wx734H_202408071841531.jpeg' },
+        ];
+
+        return (
+          <div className="gallery">
+            {items.map((item, index) => (
+              <ImageCard key={index} title={item.title} price={item.price} img={item.img} />
+            ))}
+          </div>
+        );
+      }
+
+      function App() {
+        return (
+          <div>
+            <Navbar />
+            <Gallery />
+          </div>
+        );
+      }
+
+      ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+  </body>
+</html>

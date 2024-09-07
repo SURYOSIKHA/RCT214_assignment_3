@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title> Form Inputs</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+            margin: 0;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+        input {
+            width: calc(100% - 50px);
+            padding: 10px;
+            margin: 5px 0;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        button {
+            padding: 10px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button.add-btn {
+            margin-left: 5px;
+        }
+        .remove-btn {
+            background-color: red;
+            margin-left: 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script src="https://www.unpkg.com/react@18.2.0/umd/react.development.js"></script>
+    <script src="https://www.unpkg.com/react-dom@18.2.0/umd/react-dom.development.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/babel-standalone@6.26.0/babel.min.js"></script>
+    
+    <script type="text/babel">
+        const { useState } = React;
+
+        function DynamicForm() {
+            const [hobbies, setHobbies] = useState([{ value: '' }]);
+
+            const handleChange = (index, event) => {
+                const newHobbies = [...hobbies];
+                newHobbies[index].value = event.target.value;
+                setHobbies(newHobbies);
+            };
+
+            const handleAdd = () => {
+                setHobbies([...hobbies, { value: '' }]);
+            };
+
+            const handleRemove = (index) => {
+                const newHobbies = hobbies.filter((_, i) => i !== index);
+                setHobbies(newHobbies);
+            };
+
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                alert('Hobbies: ' + hobbies.map(hobby => hobby.value).join(', '));
+            };
+
+            return (
+                <div className="container">
+                    <h2>Enter Your Hobbies</h2>
+                    <form onSubmit={handleSubmit}>
+                        {hobbies.map((hobby, index) => (
+                            <div key={index} style={{ display: 'flex', alignItems: 'center' }}>
+                                <input 
+                                    type="text" 
+                                    value={hobby.value} 
+                                    onChange={(e) => handleChange(index, e)}
+                                    placeholder="Enter a hobby"
+                                    required 
+                                />
+                                {index > 0 && (
+                                    <button 
+                                        type="button" 
+                                        className="remove-btn" 
+                                        onClick={() => handleRemove(index)}
+                                    >
+                                        X
+                                    </button>
+                                )}
+                            </div>
+                        ))}
+                        <button type="button" className="add-btn" onClick={handleAdd}>Add Hobby</button>
+                        <br /><br />
+                        <button type="submit">Submit</button>
+                    </form>
+                </div>
+            );
+        }
+
+        ReactDOM.render(<DynamicForm />, document.getElementById('root'));
+    </script>
+</body>
+</html>
